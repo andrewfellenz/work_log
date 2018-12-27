@@ -1,5 +1,5 @@
 from datetime import date
-from menu_builder import Menu
+from menu import Menu
 
 class Entry():
     def __init__(self, order=None, date=None, task=None, duration=None, notes=None, deleted=False):
@@ -19,13 +19,27 @@ class Entry():
             task = input('Please enter what task you were working on: '),
             duration = input('Please enter how much time was spent on this task: '),
             notes = input('Please enter any additional notes: ')
+            # order = to be determined
             )
         return new_entry
+
+
+    @classmethod
+    def recollect(cls, data):
+        # collect previous JSON date
+        entry = Entry()
+        entry.date = data['Date']
+        entry.task = data['Task']
+        entry.duration = data['Duration']
+        entry.notes = data['Notes']
+        entry.order = data['Order']
+
 
     def edit(self, delete=False):
         if delete:
             self.deleted = True
         else:
             Menu(*self.keys).show()
+
 
 e = Entry.enter()
