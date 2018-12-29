@@ -4,7 +4,6 @@ class Menu(dict):
             self.update({count: item})
     
     
-    
     def show(self):
         border = '-'*15 + '\n'
         menu_body = border + 'Enter a number to select a menu item\n'
