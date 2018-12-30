@@ -1,9 +1,9 @@
-from datetime import date
+import datetime
 from menu import Menu
 
 
 class Entry():
-    def __init__(self, order=None, date=None, task=None, duration=None, notes=None, deleted=False):
+    def __init__(self, date=None, task=None, duration=None, notes=None, order=None, deleted=False):
         self.order = order
         self.date = date
         self.task = task
@@ -22,7 +22,17 @@ Notes: {self.notes}
         return info
 
     def __iter__(self):
-        return self.keys
+        return self.key
+
+    @property
+    def output(self):
+        return {
+            'order': self.order,
+            'date': self.date,
+            'task': self.task,
+            'duration': self.duration,
+            'notes': self.notes
+        }
     
     @property
     def day(self):
@@ -38,8 +48,22 @@ Notes: {self.notes}
 
     @property
     def realdate(self):
-        return datetime.date(self.year, self.month, self.day)
+        return datetime.datetime(self.year, self.month, self.day, 0, 0, 0, 0)
 
+    @property
+    def posix(self):
+        return self.realdate.timestamp()
+    
+    @classmethod
+    def orders(cls, *instances):
+        all_posix = []
+        for instance in instances:
+            all_posix.append(instance.posix)
+        all_posix.sort()
+        for instance in instances:
+            instance.order = all_posix.index(instance.posix) + 1
+        return
+    
         
     @classmethod
     def enter(cls):
@@ -54,22 +78,28 @@ Notes: {self.notes}
     
 
     @classmethod
-    def recollect(cls, data):
-        # collect previous JSON date
-        entry = Entry()
-        entry.date = data['date']
-        entry.task = data['task']
-        entry.duration = data['duration']
-        entry.notes = data['notes']
-        entry.order = data['order']
-        return entry
+    def recollect(cls, *instances):
+        entries = [cls(
+            instance['date'],
+            instance['task'],
+            instance['duration'],
+            instance['notes'],
+            instance['order']
+        ) for instance in instances]
+        return entries
 
 
     def edit(self, delete=False):
         if delete:
             self.deleted = True
         else:
-            Menu(*self.keys).show()
+            selection = Menu(*self.keys).show()
+            what_to_change = "The original info is "\
+            + "\"" + f"{getattr(self, selection)}" + "\","\
+            + " what would you like to change it to? > "
+            new_info = input(what_to_change)
+            setattr(self, selection, new_info)
+            return self
 
 
 if __name__ == '__main__':

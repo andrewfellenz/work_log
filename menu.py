@@ -1,9 +1,17 @@
+import os
+import time
+
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+    
 class Menu(dict):
     def __init__(self, *args):
         for count, item in enumerate(args, 1):
             self.update({count: item})
-    
-    
+
+
     def show(self):
         border = '-'*15 + '\n'
         menu_body = border + 'Enter a number to select a menu item\n'
@@ -12,17 +20,19 @@ class Menu(dict):
         menu_body += border
 
         while True:
+            clear_screen()
             try:
                 choice = int(input(menu_body))
                 # These lines are place holders to make the code more testable
                 if choice == 0 or choice > len(self):
-                    pass
+                    raise ValueError('Please enter the number of a menu item.') # this needs work to read correctly
                 else:
-                    return choice
+                    return self[choice].lower()
             except ValueError:
-                print('Please choose from the menu items')
+                print('Please choose from the menu items.')
+                time.sleep(1)
 
     
 if __name__ == '__main__':
     e = Menu('farts', 'chestnuts', 'apples', 'oranges', 'happiness')
-    print(e.show())
+    e.show()
