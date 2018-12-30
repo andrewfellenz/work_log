@@ -62,8 +62,13 @@ Notes: {self.notes}
         all_posix.sort()
         for instance in instances:
             instance.order = all_posix.index(instance.posix) + 1
-        return
-    
+        # I learned aboute lambda from a stack exchange post:
+        # https://stackoverflow.com/questions/403421/how-to-
+        # sort-a-list-of-objects-based-on-an-attribute-of-
+        # the-objects/48731059
+        new_order = sorted(instances, key=lambda x: x.order)
+        return new_order
+                
         
     @classmethod
     def enter(cls):

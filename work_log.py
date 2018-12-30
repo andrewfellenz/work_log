@@ -32,13 +32,10 @@ with open('data.json', 'r') as write_file:
     data = json.load(write_file)
     entries = Entry.recollect(*data)
 
-with open('output.json', 'w') as write_file:
-    new_info = Entry.orders(*entries)
-    count = 1
-    while count < len(entries):
-        for entry in entries:
-            if entry.order == count:
-                json.dump(entry.output, write_file, indent=4)
-                count +=1
+output = [entry.output for entry in Entry.orders(*entries)]
 
-    
+
+with open('output.json', 'w') as write_file:
+    json.dump(output, write_file, indent=2)
+
+
