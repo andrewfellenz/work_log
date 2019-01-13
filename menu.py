@@ -25,7 +25,7 @@ class Menu(dict):
                 choice = int(input(menu_body))
                 # These lines are place holders to make the code more testable
                 if choice == 0 or choice > len(self):
-                    raise ValueError('Please enter the number of a menu item.') # this needs work to read correctly
+                    raise ValueError
                 else:
                     return self[choice].lower()
             except ValueError:

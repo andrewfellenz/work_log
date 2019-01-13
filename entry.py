@@ -62,7 +62,7 @@ Notes: {self.notes}
         all_posix.sort()
         for instance in instances:
             instance.order = all_posix.index(instance.posix) + 1
-        # I learned aboute lambda from a stack exchange post:
+        # I learned about lambda from a stack exchange post:
         # https://stackoverflow.com/questions/403421/how-to-
         # sort-a-list-of-objects-based-on-an-attribute-of-
         # the-objects/48731059
@@ -72,13 +72,19 @@ Notes: {self.notes}
         
     @classmethod
     def enter(cls):
-        new_entry = cls(
-            date = input('Please enter a date in MM/DD/YYYY format: '),
-            task = input('Please enter what task you were working on: '),
-            duration = input('Please enter how much time was spent on this task: '),
-            notes = input('Please enter any additional notes: ')
-            # order = to be determined
-            )
+        new_entry = cls(date = input('Please enter a date in MM/DD/YYYY format: '))
+        while True:
+            try:
+                if new_entry.realdate:
+                    break
+            except ValueError:
+                new_entry.date = input("Try entering another date using the MM/DD/YYYY format.")
+        new_entry.task = input('Please enter what task you were working on: ')
+        new_entry.duration = input('Please enter how much time was on this task: ')
+        add_notes = input('Would you like to add any additional notes? Y/N ').lower()
+        if add_notes == 'y' or 'y' in add_notes:
+            new_entry.notes = input('Please enter your notes: ')
+        print('Your entry has been added.')
         return new_entry
     
 
